@@ -50,6 +50,15 @@ public class Person implements Serializable, Auditable {
     @Column(name = "birth_year")
     private Integer birthYear;
 
+    @Column(name = "google_id")
+    private String googleId;
+
+    @Column(name = "google_id_token")
+    private String googleIdToken;
+
+    @Column(name = "google_profile_picture_url")
+    private String googleProfilePictureUrl;
+
     @Embedded
     private AuditFields audit = new AuditFields();
 }

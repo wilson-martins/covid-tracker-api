@@ -94,3 +94,9 @@ create table person_location_config
     constraint person_location_config_pk
         primary key (person_location_config_id)
 );
+
+ALTER TABLE person ADD COLUMN google_id VARCHAR (256);
+ALTER TABLE person ADD COLUMN google_id_token VARCHAR (256);
+ALTER TABLE person ADD COLUMN google_profile_picture_url VARCHAR (512);
+
+ALTER TABLE status_history ADD COLUMN person_id bigint, ADD FOREIGN KEY fk_person(person_id) REFERENCES person(person_id);
