@@ -6,7 +6,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 
@@ -24,7 +24,7 @@ public class StatusHistory implements Serializable, Auditable {
     private Long diseaseId;
 
     @Column(name = "status_dt")
-    private LocalDateTime statusDt;
+    private Date statusDt;
 
     @Column(name = "value")
     @Enumerated(EnumType.STRING)
