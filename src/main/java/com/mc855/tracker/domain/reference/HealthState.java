@@ -1,4 +1,4 @@
-package com.mc855.tracker.domain;
+package com.mc855.tracker.domain.reference;
 
 public enum HealthState {
     POSITIVE,

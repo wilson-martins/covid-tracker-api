@@ -2,6 +2,7 @@ package com.mc855.tracker.domain;
 
 import com.mc855.tracker.domain.auditable.AuditFields;
 import com.mc855.tracker.domain.auditable.Auditable;
+import com.mc855.tracker.domain.reference.HealthState;
 import lombok.Data;
 
 import javax.persistence.*;
