@@ -2,8 +2,10 @@ package com.mc855.tracker.service.dto;
 
 import com.mc855.tracker.domain.Location;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class LocationDto {
 
     private Long personId;
