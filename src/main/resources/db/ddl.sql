@@ -115,3 +115,26 @@ create table if not exists location
     update_dt     datetime       null
 );
 
+create index location_person_id_latitude_longitude_index
+    on location (person_id, latitude, longitude);
+
+alter table location
+    add short_latitude decimal(10,4) null after latitude;
+
+alter table location drop column last_visit;
+
+alter table location
+    add short_longitude decimal(10,4) null after longitude;
+
+alter table location drop column visit_counter;
+
+alter table location
+    add visited_dt date null after short_longitude;
+
+drop index location_person_id_latitude_longitude_index on location;
+
+create unique index location_dt_uindex
+    on location (person_id, short_latitude, short_longitude, visited_dt);
+
+
+

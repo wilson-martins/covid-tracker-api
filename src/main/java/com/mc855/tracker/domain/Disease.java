@@ -1,6 +1,7 @@
 package com.mc855.tracker.domain;
 
 import com.mc855.tracker.domain.auditable.AuditFields;
+import com.mc855.tracker.domain.auditable.AuditInterceptor;
 import com.mc855.tracker.domain.auditable.Auditable;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.io.Serializable;
 @Data
 
 @Entity
-@EntityListeners(AuditFields.class)
+@EntityListeners(AuditInterceptor.class)
 @Table(name = "disease")
 public class Disease implements Serializable, Auditable {
 
