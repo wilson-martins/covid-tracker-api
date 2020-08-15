@@ -101,3 +101,41 @@ ALTER TABLE person ADD COLUMN google_id_token VARCHAR (256);
 ALTER TABLE person ADD COLUMN google_profile_picture_url VARCHAR (512);
 
 ALTER TABLE status_history ADD COLUMN person_id bigint, ADD FOREIGN KEY fk_person(person_id) REFERENCES person(person_id);
+
+create table if not exists location
+(
+    location_id   int auto_increment primary key,
+    person_id     int            null,
+    latitude      decimal(10, 6) null,
+    longitude     decimal(10, 6) null,
+    last_visit    timestamp      null,
+    visit_counter int            null,
+    create_user   varchar(40)    null,
+    create_dt     datetime       null,
+    update_user   varchar(40)    null,
+    update_dt     datetime       null
+);
+
+create index location_person_id_latitude_longitude_index
+    on location (person_id, latitude, longitude);
+
+alter table location
+    add short_latitude decimal(10,4) null after latitude;
+
+alter table location drop column last_visit;
+
+alter table location
+    add short_longitude decimal(10,4) null after longitude;
+
+alter table location drop column visit_counter;
+
+alter table location
+    add visited_dt date null after short_longitude;
+
+drop index location_person_id_latitude_longitude_index on location;
+
+create unique index location_dt_uindex
+    on location (person_id, short_latitude, short_longitude, visited_dt);
+
+
+

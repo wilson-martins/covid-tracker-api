@@ -1,10 +1,14 @@
 package com.mc855.tracker.service;
 
 import com.mc855.tracker.domain.StatusHistory;
+import com.mc855.tracker.domain.reference.HealthState;
 import com.mc855.tracker.repository.StatusHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,5 +34,14 @@ public class StatusHistoryBO {
 
     public StatusHistory updateStatusHistory(StatusHistory statusHistory) {
         return statusHistoryRepository.save(statusHistory);
+    }
+
+    public Collection<StatusHistory> getStatusHistory(Collection<Long> personIds, Collection<HealthState> healthStates, Date date) {
+        if (personIds == null || personIds.isEmpty()
+                || healthStates == null || healthStates.isEmpty()
+                || date == null) {
+            return new ArrayList<>();
+        }
+        return this.statusHistoryRepository.findAllByPersonIdInAndValueInAndStatusDtGreaterThanEqual(personIds, healthStates, date);
     }
 }
