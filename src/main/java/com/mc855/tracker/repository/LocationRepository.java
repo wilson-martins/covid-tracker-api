@@ -38,5 +38,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
             "                   hour(loc.visited_dt)\n" +
             "          having c > 1);", nativeQuery = true)
     List<Location> findRiskLocations(@Param("dt") Date date,
-                                     @Param("personIds") Collection<Long> personIds)
+                                     @Param("personIds") Collection<Long> personIds);
 }

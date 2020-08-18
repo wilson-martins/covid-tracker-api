@@ -5,6 +5,7 @@ import com.mc855.tracker.domain.auditable.AuditInterceptor;
 import com.mc855.tracker.domain.auditable.Auditable;
 import com.mc855.tracker.service.dto.LocationDto;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -23,6 +24,7 @@ import java.util.Date;
 @Entity
 @EntityListeners(AuditInterceptor.class)
 @Table(name = "location")
+@NoArgsConstructor
 public class Location implements Serializable, Auditable {
 
     @Id
@@ -58,6 +60,14 @@ public class Location implements Serializable, Auditable {
         this.longitude = dto.getLongitude();
         this.shortLongitude = BigDecimal.valueOf(dto.getLongitude()).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
         this.visitedDt = dto.getVisitedDt();
+    }
+
+    public void setShortLat() {
+        this.shortLatitude = BigDecimal.valueOf(this.getLatitude()).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    public void setShortLong() {
+        this.shortLongitude = BigDecimal.valueOf(this.getLongitude()).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     public String getKey() {

@@ -136,5 +136,4 @@ drop index location_person_id_latitude_longitude_index on location;
 create unique index location_dt_uindex
     on location (person_id, short_latitude, short_longitude, visited_dt);
 
-
-
+alter table location modify visited_dt datetime null;
