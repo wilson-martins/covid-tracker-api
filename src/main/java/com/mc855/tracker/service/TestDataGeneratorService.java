@@ -2,9 +2,12 @@ package com.mc855.tracker.service;
 
 import com.mc855.tracker.domain.Location;
 import com.mc855.tracker.domain.Person;
+import com.mc855.tracker.domain.StatusHistory;
+import com.mc855.tracker.domain.reference.HealthState;
 import com.mc855.tracker.repository.LocationRepository;
 import com.mc855.tracker.repository.PersonRepository;
 import com.mc855.tracker.repository.StatusHistoryRepository;
+import com.mc855.tracker.service.dto.StatusHistoryTestDataDto;
 import com.mc855.tracker.service.dto.TestDataDto;
 import com.mc855.tracker.util.CsvUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +18,12 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -32,6 +39,7 @@ public class TestDataGeneratorService {
     private StatusHistoryRepository statusHistoryRepository;
 
     private static List<TestDataDto> testDataList = new ArrayList<>();
+    private static Map<Integer, List<HealthState>> healthStateMap = new HashMap<>();
 
     public void generatePerson(Integer generatePerson) {
         if (generatePerson == null) {
@@ -105,26 +113,37 @@ public class TestDataGeneratorService {
     }
 
     public void generateStatusHistory() {
-//        if (generateStatus == null) {
-//            return;
-//        }
-//
-//        final List<Long> personIds = this.personRepository.findAllPersonIds();
-//
-//        Collection<StatusHistory> statusHistories = new ArrayList<>();
-//        // Only give status for 40% of people
-//        // create some cenarios
-//        // randomize status periods
-//        for (int i = 0; i < generateStatus; i++) {
-//            StatusHistory statusHistory = new StatusHistory();
-//            statusHistory.setDiseaseId();
-//            statusHistory.setStatusDt();
-//            statusHistory.setValue();
-//            statusHistory.setPersonId(personIds.get((int) Math.round((Math.random() * personIds.size()))));
-//            statusHistories.add(statusHistory);
-//        }
-//
-//        this.statusHistoryRepository.saveAll(statusHistories);
+
+        if (healthStateMap == null || healthStateMap.isEmpty()) {
+            populateStatusHistoryTestData();
+        }
+        final List<Long> personIds = this.personRepository.findAllPersonIds();
+
+        Collection<StatusHistory> statusHistories = new ArrayList<>();
+        for (Long personId : personIds) {
+            log.info("Generating status histories for person [{}/{}]", personIds.indexOf(personId) + 1, personIds.size());
+            if (0.3 >= Math.random()) {
+                continue;
+            }
+
+            long baseTime = BigDecimal.valueOf((Math.random() * (1597723605000L - 1595045205000L)) + 1595045205000L).longValue();
+            int statusCase = BigDecimal.valueOf(Math.random() * healthStateMap.keySet().size() - 1).intValue();
+            List<HealthState> healthStates = healthStateMap.get(statusCase);
+
+            for (HealthState healthState : healthStates) {
+                StatusHistory statusHistory = new StatusHistory();
+                statusHistory.setDiseaseId(1L);
+                statusHistory.setStatusDt(new Date(baseTime));
+                long timeDelta = BigDecimal.valueOf(Math.random() * 1123200000).intValue();
+                baseTime += timeDelta;
+                statusHistory.setValue(healthState);
+                statusHistory.setPersonId(personId);
+                statusHistories.add(statusHistory);
+            }
+        }
+
+        log.info("Saving [{}] generated status histories", statusHistories.size());
+        this.statusHistoryRepository.saveAll(statusHistories);
     }
 
     private void populateTestData() {
@@ -132,21 +151,40 @@ public class TestDataGeneratorService {
 
         URL fileUrl = classLoader.getResource("random_data_generator.csv");
         if (fileUrl != null) {
-            this.populateTestData(fileUrl.getPath());
+            testDataList = this.populateTestData(fileUrl.getPath(), TestDataDto.class);
         }
     }
 
-    private void populateTestData(String filePath) {
+    private void populateStatusHistoryTestData() {
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        URL fileUrl = classLoader.getResource("status_history_possible_cases.csv");
+        if (fileUrl != null) {
+            List<StatusHistoryTestDataDto> testDataDtos = this.populateTestData(fileUrl.getPath(), StatusHistoryTestDataDto.class);
+
+            if (testDataDtos.isEmpty()) {
+                return;
+            }
+
+            Map<Integer, List<StatusHistoryTestDataDto>> dtoMap = testDataDtos.stream().collect(Collectors.groupingBy(StatusHistoryTestDataDto::getCaseGroup));
+            for (Map.Entry<Integer, List<StatusHistoryTestDataDto>> entry : dtoMap.entrySet()) {
+                healthStateMap.put(entry.getKey(),
+                        entry.getValue().stream().sorted(Comparator.comparing(StatusHistoryTestDataDto::getPosition)).map(x -> HealthState.valueOf(x.getState())).collect(Collectors.toList()));
+            }
+        }
+    }
+
+    private <T> List<T> populateTestData(String filePath, Class<T> clazz) {
         if (filePath == null || filePath.isEmpty()) {
-            return;
+            return new ArrayList<>();
         }
 
-        List<TestDataDto> testDataDtos = CsvUtil.getObject(TestDataDto.class, filePath);
+        List<T> testDataDtos = CsvUtil.getObject(clazz, filePath);
         if (testDataDtos == null || testDataDtos.isEmpty()) {
             log.error("Could not populate data test");
-            return;
+            return new ArrayList<>();
         }
 
-        testDataList = testDataDtos;
+        return testDataDtos;
     }
 }

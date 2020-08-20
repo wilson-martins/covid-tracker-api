@@ -100,8 +100,6 @@ ALTER TABLE person ADD COLUMN google_id VARCHAR (256);
 ALTER TABLE person ADD COLUMN google_id_token VARCHAR (256);
 ALTER TABLE person ADD COLUMN google_profile_picture_url VARCHAR (512);
 
-ALTER TABLE status_history ADD COLUMN person_id bigint, ADD FOREIGN KEY fk_person(person_id) REFERENCES person(person_id);
-
 create table if not exists location
 (
     location_id   int auto_increment primary key,
@@ -138,3 +136,6 @@ create unique index location_dt_uindex
     on location (person_id, short_latitude, short_longitude, visited_dt);
 
 alter table location modify visited_dt datetime null;
+
+alter table status_history modify value varchar(20) null;
+
