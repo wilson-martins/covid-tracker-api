@@ -6,21 +6,9 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://35.198.3.25:3306/dev-api
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/dev-api
     username: root
     password: BksyncPbJsPycNEP
-    tomcat:
-      max-active: 9
-      max-wait: 10000
-      min-idle: 9
-      test-on-borrow: true
-      time-between-eviction-runs-millis: 300000
-      max-idle: 9
-      validation-query: select 1
-      validation-interval: 30000
-      test-while-idle: true
-    hikari:
-      maximum-pool-size: 9
-      max-lifetime: 10000
   cache:
     type: simple
