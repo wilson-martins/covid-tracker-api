@@ -6,9 +6,9 @@ spring:
       ddl-auto: none
     database-platform: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    url: jdbc:mysql://b77b5f054fde14:3b1f492d@us-cdbr-east-02.cleardb.com/heroku_cac68a2130329c7?reconnect=true
-    username: b77b5f054fde14:3b1f492d@us-cdbr-east-02.cleardb.com
-    password: 3b1f492d
+    url: jdbc:mysql://35.198.3.25:3306/dev-api
+    username: root
+    password: BksyncPbJsPycNEP
     tomcat:
       max-active: 9
       max-wait: 10000
