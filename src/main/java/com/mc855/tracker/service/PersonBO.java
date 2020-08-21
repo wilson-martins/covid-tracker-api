@@ -47,7 +47,7 @@ public class PersonBO {
     }
 
     public Person updatePerson(Person person) {
-        Person dbPerson = this.personRepository.findByGoogleIdToken(person.getGoogleIdToken());
+        Person dbPerson = this.personRepository.findByGoogleId(person.getGoogleId());
 
         if (dbPerson == null) {
             dbPerson = personRepository.save(person);
@@ -59,6 +59,9 @@ public class PersonBO {
             statusHistory.setValue(HealthState.NEGATIVE);
 
             this.statusHistoryRepository.save(statusHistory);
+        } else {
+            dbPerson.setGoogleIdToken(person.getGoogleIdToken());
+            dbPerson.setLastNotificationDt(null);
         }
 
         return dbPerson;
