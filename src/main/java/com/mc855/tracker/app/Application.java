@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -24,6 +25,7 @@ import java.util.TimeZone;
         "com.mc855.tracker.app",
         "com.mc855.tracker.config",
         "com.mc855.tracker.domain",
+        "com.mc855.tracker.jobs"
 })
 @EnableJpaRepositories({
         "com.mc855.tracker.repository"
@@ -33,6 +35,7 @@ import java.util.TimeZone;
         "com.mc855.tracker.domain"
 })
 @EnableCaching
+@Configuration
 @EnableScheduling
 @EnableConfigurationProperties
 @Slf4j

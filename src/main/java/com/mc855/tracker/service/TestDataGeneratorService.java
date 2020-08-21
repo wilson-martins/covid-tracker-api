@@ -84,7 +84,7 @@ public class TestDataGeneratorService {
             for (int j = 0; j < batchesPerPerson; j++) {
                 double baseLatitude = -1 * ((Math.random() * (23053654 - 22835610)) + 22835610) / 1000000;
                 double baseLongitude = -1 * ((Math.random() * (47236467 - 46963849)) + 46963849) / 1000000;
-                long baseTime = BigDecimal.valueOf((Math.random() * (1597723605000L - 1595045205000L)) + 1595045205000L).longValue();
+                long baseTime = BigDecimal.valueOf((Math.random() * (1597723605000L - 1596045205000L)) + 1596045205000L).longValue();
                 for (int i = 0; i < entriesPerBatch; i++) {
                     Location location = new Location();
                     location.setPersonId(person.getPersonId());

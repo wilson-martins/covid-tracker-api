@@ -42,6 +42,6 @@ public class StatusHistoryBO {
                 || date == null) {
             return new ArrayList<>();
         }
-        return this.statusHistoryRepository.findAllByPersonIdInAndValueInAndStatusDtGreaterThanEqual(personIds, healthStates, date);
+        return this.statusHistoryRepository.findAllByPersonIdInAndValueNotInAndStatusDtGreaterThanEqual(personIds, healthStates, date);
     }
 }

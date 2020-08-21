@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 
@@ -59,6 +60,9 @@ public class Person implements Serializable, Auditable {
 
     @Column(name = "google_profile_picture_url")
     private String googleProfilePictureUrl;
+
+    @Column(name = "last_notification_dt")
+    private Date lastNotificationDt;
 
     @Embedded
     private AuditFields audit = new AuditFields();

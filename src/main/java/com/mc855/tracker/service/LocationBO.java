@@ -87,7 +87,7 @@ public class LocationBO {
         Collection<StatusHistory> statusHistories = this.statusHistoryBO.getStatusHistory(
                 persons.stream().map(Person::getPersonId).collect(Collectors.toList()),
                 healthStates, calendar.getTime());
-        Map<Long, StatusHistory> personStatusMap = statusHistories.stream().collect(Collectors.toMap(StatusHistory::getPersonId, x -> x));
+        Map<Long, List<StatusHistory>> personStatusMap = statusHistories.stream().collect(Collectors.groupingBy(StatusHistory::getPersonId));
 
         Map<String, Set<Person>> keyPersonsMap = new HashMap<>();
         for (Map.Entry<String, List<Location>> keyValue : keyLocationsMap.entrySet()) {
@@ -101,8 +101,8 @@ public class LocationBO {
             for (Location l : keyValue.getValue()) {
                 personList.add(personMap.get(l.getPersonId()));
 
-                StatusHistory statusHistory = personStatusMap.get(l.getPersonId());
-                if (statusHistory != null) {
+                List<StatusHistory> statusHistory = personStatusMap.get(l.getPersonId());
+                if (statusHistory != null && !statusHistory.isEmpty()) {
                     contaminated = true;
                 }
             }
@@ -115,8 +115,8 @@ public class LocationBO {
         Collection<Person> peopleInRisk = new ArrayList<>();
         for (Set<Person> personSet : keyPersonsMap.values()) {
             for (Person person : personSet) {
-                StatusHistory statusHistory = personStatusMap.get(person.getPersonId());
-                if (statusHistory == null) {
+                List<StatusHistory> statusHistory = personStatusMap.get(person.getPersonId());
+                if (statusHistory == null || statusHistory.isEmpty()) {
                     peopleInRisk.add(person);
                 }
             }

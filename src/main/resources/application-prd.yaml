@@ -12,3 +12,6 @@ spring:
     password: BksyncPbJsPycNEP
   cache:
     type: simple
+
+server:
+  port: 80
