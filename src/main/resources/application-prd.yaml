@@ -1,4 +1,5 @@
 spring:
+  profiles: prd
   jpa:
     show-sql: false
     hibernate:
@@ -6,7 +7,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://35.198.3.25:3306/dev-api
+    url: jdbc:mysql://localhost:3307/dev-api
     username: root
     password: BksyncPbJsPycNEP
   cache:
