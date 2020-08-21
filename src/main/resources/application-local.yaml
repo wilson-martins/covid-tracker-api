@@ -12,3 +12,6 @@ spring:
     password: root
   cache:
     type: simple
+
+credentials:
+  firebase: '/Users/kissolutions/workspace/covid-tracker-api/src/main/resources/covid-tracker-android-bf039-firebase-adminsdk-o07r6-b2a4faa8d4.json'

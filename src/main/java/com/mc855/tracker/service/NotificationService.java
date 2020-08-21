@@ -1,5 +1,8 @@
 package com.mc855.tracker.service;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.MulticastMessage;
@@ -7,8 +10,11 @@ import com.mc855.tracker.domain.Person;
 import com.mc855.tracker.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -22,7 +28,20 @@ public class NotificationService {
     @Autowired
     private PersonRepository personRepository;
 
-    public void sendNotifications(Collection<Person> personCollection) {
+    @Value("${credentials.firebase}")
+    private String firebaseConfigFilePath;
+
+    public void sendNotifications(Collection<Person> personCollection) throws IOException {
+
+        FileInputStream serviceAccount =
+                new FileInputStream(firebaseConfigFilePath);
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl("https://covid-tracker-android-bf039.firebaseio.com")
+                .build();
+
+        FirebaseApp.initializeApp(options);
 
         try {
             // Create a list containing up to 100 registration tokens.
