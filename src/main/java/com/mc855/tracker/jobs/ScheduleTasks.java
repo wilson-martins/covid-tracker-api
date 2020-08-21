@@ -18,7 +18,7 @@ public class ScheduleTasks {
     @Autowired
     private LocationBO locationBO;
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 240000)
     public void checkRisks() {
         HealthState[] healthStates = {HealthState.POSITIVE, HealthState.CURED};
         Collection<Person> persons = this.locationBO.checkRisk(null, Arrays.asList(healthStates));
