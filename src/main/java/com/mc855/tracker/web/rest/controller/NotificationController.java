@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/location")
+@RequestMapping("/notification")
 public class NotificationController {
 
     @Autowired
