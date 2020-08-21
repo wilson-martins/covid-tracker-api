@@ -24,7 +24,7 @@ public class ScheduleTasks {
 
     @Scheduled(fixedDelay = 180000)
     public void checkRisks() {
-        HealthState[] healthStates = {HealthState.POSITIVE, HealthState.CURED};
+        HealthState[] healthStates = {HealthState.NEGATIVE, HealthState.CURED};
         Collection<Person> persons = this.locationBO.checkRisk(null, Arrays.asList(healthStates));
         log.info("Found [{}] persons to notify", persons.size());
         this.notificationService.sendNotifications(persons);
