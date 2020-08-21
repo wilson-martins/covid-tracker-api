@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -31,17 +32,24 @@ public class NotificationService {
     @Value("${credentials.firebase}")
     private String firebaseConfigFilePath;
 
-    public void sendNotifications(Collection<Person> personCollection) throws IOException {
+    @PostConstruct
+    public void init() {
+        try {
+            FileInputStream serviceAccount =
+                    new FileInputStream(firebaseConfigFilePath);
 
-        FileInputStream serviceAccount =
-                new FileInputStream(firebaseConfigFilePath);
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://covid-tracker-android-bf039.firebaseio.com")
+                    .build();
 
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://covid-tracker-android-bf039.firebaseio.com")
-                .build();
+            FirebaseApp.initializeApp(options);
+        } catch (Exception e) {
+            log.error("Could not initialize firebase credentials");
+        }
+    }
 
-        FirebaseApp.initializeApp(options);
+    public void sendNotifications(Collection<Person> personCollection) {
 
         try {
             // Create a list containing up to 100 registration tokens.
