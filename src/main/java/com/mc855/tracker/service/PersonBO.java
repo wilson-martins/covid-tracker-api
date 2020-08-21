@@ -47,15 +47,19 @@ public class PersonBO {
     }
 
     public Person updatePerson(Person person) {
-        Person dbPerson = personRepository.save(person);
+        Person dbPerson = this.personRepository.findByGoogleIdToken(person.getGoogleIdToken());
 
-        StatusHistory statusHistory = new StatusHistory();
-        statusHistory.setDiseaseId(1L);
-        statusHistory.setPersonId(dbPerson.getPersonId());
-        statusHistory.setStatusDt(new Date());
-        statusHistory.setValue(HealthState.NEGATIVE);
+        if (dbPerson == null) {
+            dbPerson = personRepository.save(person);
 
-        this.statusHistoryRepository.save(statusHistory);
+            StatusHistory statusHistory = new StatusHistory();
+            statusHistory.setDiseaseId(1L);
+            statusHistory.setPersonId(dbPerson.getPersonId());
+            statusHistory.setStatusDt(new Date());
+            statusHistory.setValue(HealthState.NEGATIVE);
+
+            this.statusHistoryRepository.save(statusHistory);
+        }
 
         return dbPerson;
     }

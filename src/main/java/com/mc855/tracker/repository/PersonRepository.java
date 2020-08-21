@@ -17,6 +17,8 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query(value = "select person_id from person", nativeQuery = true)
     List<Long> findAllPersonIds();
 
+    Person findByGoogleIdToken(String token);
+
     @Transactional
     @Modifying
     @Query("update Person p set p.googleIdToken = :googleIdToken where p.id = :id")
