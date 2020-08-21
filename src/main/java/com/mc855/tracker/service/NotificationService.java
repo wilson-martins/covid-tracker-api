@@ -57,6 +57,9 @@ public class NotificationService {
             final Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -2);
             Collection<Person> filteredPersons = personCollection.stream().filter(p -> p.getLastNotificationDt() == null || calendar.getTime().after(p.getLastNotificationDt())).collect(Collectors.toList());
+            if (filteredPersons.isEmpty()) {
+                return;
+            }
             List<String> registrationTokens = filteredPersons.stream().map(Person::getGoogleIdToken).collect(Collectors.toList());
             MulticastMessage message = MulticastMessage.builder()
                     .putData("body", "Atenção: Você teve contato nos últimos dias com pessoas com Covid-19. Tome as medidas necessárias!")
